@@ -44,6 +44,10 @@ public class RecordId implements Serializable {
         return pid;
     }
 
+    public void deletepid() {
+        this.pid = null;
+    }
+
     /**
      * Two RecordId objects are considered equal if they represent the same
      * tuple.
