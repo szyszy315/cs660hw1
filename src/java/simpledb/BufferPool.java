@@ -88,7 +88,10 @@ public class BufferPool {
             int tableid = pid.getTableId();
             DbFile target = cata.getDatabaseFile(tableid);
             Page page = target.readPage(pid);
-            lruCache.put(pid,page);
+            Page removing = lruCache.put(pid,page);
+            if (removing != null) {
+                evictPage(removing.getId(),removing);
+            }
             return page;
         }
 
@@ -233,10 +236,9 @@ public class BufferPool {
         // some code goes here
         // not necessary for lab1
         DbFile file = Database.getCatalog().getDatabaseFile(pid.getTableId());
-        Page flushedpage = lruCache.get(pid);
+        Page flushedpage = lruCache.Simpleget(pid);
         flushedpage.markDirty(false,null);
         file.writePage(flushedpage);
-        lruCache.lruchacheremove(pid);
     }
 
     /** Write all pages of the specified transaction to disk.
@@ -263,7 +265,8 @@ public class BufferPool {
         try {
             if (page.isDirty() != null) {
                 flushPage(pid);
-        }
+            }
+            lruCache.remove(pid);
         }
         catch (IOException e) {
             e.printStackTrace();

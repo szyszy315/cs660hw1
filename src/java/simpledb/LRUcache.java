@@ -70,12 +70,7 @@ public class LRUcache {
         tail.pre = head;
     }
 
-    public void lruchacheremove(PageId pid) {
-        this.cache.remove(pid);
-    }
-
     public Page get(PageId key) {
-
         DLinkedNode node = cache.get(key);
         if(node == null){
             throw new NoSuchElementException();
@@ -107,6 +102,10 @@ public class LRUcache {
         return cache.containsKey(p);
     }
 
+    public Page Simpleget(PageId pid) {
+        return cache.get(pid).value;
+    }
+
     public Page put(PageId key, Page value) {
         DLinkedNode node = cache.get(key);
         Page res = null;
@@ -125,7 +124,6 @@ public class LRUcache {
                 // pop the tail
                 DLinkedNode tail = this.popTail();
                 res = tail.value;
-                --count;
             }
         }else{
             // update the value.
